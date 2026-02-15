@@ -1,0 +1,9 @@
+2026/02/15-16:08:13.565 360eb4 Reusing MANIFEST /Volumes/rythmn103/code/hospital-project/userDataDir/hospital/Default/Local Storage/leveldb/MANIFEST-000001
+2026/02/15-16:08:13.566 360eb4 Recovering log #3
+2026/02/15-16:08:13.567 360eb4 Reusing old log /Volumes/rythmn103/code/hospital-project/userDataDir/hospital/Default/Local Storage/leveldb/000003.log 
+2026/02/15-16:49:50.525 360eb7 Level-0 table #5: started
+2026/02/15-16:49:50.531 360eb7 Level-0 table #5: 17623 bytes OK
+2026/02/15-16:49:50.534 360eb7 Delete type=0 #3
+2026/02/15-18:38:50.580 360eb7 Level-0 table #7: started
+2026/02/15-18:38:50.585 360eb7 Level-0 table #7: 12148 bytes OK
+2026/02/15-18:38:50.588 360eb7 Delete type=0 #4

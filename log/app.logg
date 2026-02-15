@@ -1,0 +1,523 @@
+{
+  message: 'Server is running on port: 21465',
+  level: 'info',
+  timestamp: '2026-02-15T06:30:16.857Z'
+}
+{
+  message: '\x1B[31m Visit 0.0.0.0:21465/api-docs for Swagger docs',
+  level: 'info',
+  timestamp: '2026-02-15T06:30:16.859Z'
+}
+{
+  message: 'WPPConnect-Server version: 2.8.11',
+  level: 'info',
+  timestamp: '2026-02-15T06:30:16.859Z'
+}
+{
+  code: 'ERR_INVALID_URL',
+  input: '0.0.0.0:21465/api/THISISMYSECURETOKEN/start-all',
+  level: 'error',
+  message: 'Invalid URL',
+  stack: 'TypeError: Invalid URL\n' +
+    '    at new URL (node:internal/url:827:25)\n' +
+    '    at dispatchHttpRequest (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:3162:20)\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:3002:5\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at wrapAsync (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:2982:10)\n' +
+    '    at http (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:3068:10)\n' +
+    '    at Axios.dispatchRequest (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4636:10)\n' +
+    '    at Axios._request (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4942:33)\n' +
+    '    at Axios.request (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4791:25)\n' +
+    '    at Axios.httpMethod [as post] (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4981:19)\n' +
+    '    at Function.wrap [as post] (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:40:15)\n' +
+    '    at startAllSessions (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/util/functions.js:242:26)\n' +
+    '    at Server.<anonymous> (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/index.js:126:72)\n' +
+    '    at Object.onceWrapper (node:events:633:28)\n' +
+    '    at Server.emit (node:events:531:35)\n' +
+    '    at emitListeningNT (node:net:1983:10)\n' +
+    '    at Axios.request (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4796:41)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async startAllSessions (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/util/functions.js:242:5)',
+  timestamp: '2026-02-15T06:30:16.861Z'
+}
+{
+  message: 'ID: SgFYqf3WSZjMB5BPAAAB entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:30:39.088Z'
+}
+{
+  message: 'notLogged\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:30:47.902Z'
+}
+{
+  message: 'qrReadSuccess\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:27.525Z'
+}
+{
+  message: 'Started Session: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:28.728Z'
+}
+{
+  message: 'ID: SgFYqf3WSZjMB5BPAAAB saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:28.729Z'
+}
+{
+  message: 'State Change PAIRING: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:29.012Z'
+}
+{
+  message: 'State Change CONNECTED: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:29.013Z'
+}
+{
+  message: 'ID: p3Qtx4QSpuuvRvL9AAAD entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:29.289Z'
+}
+{
+  message: 'ID: p3Qtx4QSpuuvRvL9AAAD saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:57.963Z'
+}
+{
+  message: 'ID: d1HI51adXwz5XoYuAAAF entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:59.694Z'
+}
+{
+  message: 'ID: d1HI51adXwz5XoYuAAAF saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:59.773Z'
+}
+{
+  message: 'ID: -ZlTbKE8FqjlWwDkAAAH entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:31:59.927Z'
+}
+{
+  message: 'Server is running on port: 21465',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:10.903Z'
+}
+{
+  message: '\x1B[31m Visit 0.0.0.0:21465/api-docs for Swagger docs',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:10.904Z'
+}
+{
+  message: 'WPPConnect-Server version: 2.8.11',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:10.904Z'
+}
+{
+  code: 'ERR_INVALID_URL',
+  input: '0.0.0.0:21465/api/THISISMYSECURETOKEN/start-all',
+  level: 'error',
+  message: 'Invalid URL',
+  stack: 'TypeError: Invalid URL\n' +
+    '    at new URL (node:internal/url:827:25)\n' +
+    '    at dispatchHttpRequest (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:3162:20)\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:3002:5\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at wrapAsync (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:2982:10)\n' +
+    '    at http (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:3068:10)\n' +
+    '    at Axios.dispatchRequest (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4636:10)\n' +
+    '    at Axios._request (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4942:33)\n' +
+    '    at Axios.request (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4791:25)\n' +
+    '    at Axios.httpMethod [as post] (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4981:19)\n' +
+    '    at Function.wrap [as post] (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:40:15)\n' +
+    '    at startAllSessions (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/util/functions.js:242:26)\n' +
+    '    at Server.<anonymous> (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/index.js:126:72)\n' +
+    '    at Object.onceWrapper (node:events:633:28)\n' +
+    '    at Server.emit (node:events:531:35)\n' +
+    '    at emitListeningNT (node:net:1983:10)\n' +
+    '    at Axios.request (/Volumes/rythmn103/code/hospital-project/node_modules/axios/dist/node/axios.cjs:4796:41)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async startAllSessions (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/util/functions.js:242:5)',
+  timestamp: '2026-02-15T06:40:10.906Z'
+}
+{
+  message: 'ID: -LemfuB1cekK5J9eAAAB entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:13.140Z'
+}
+{
+  level: 'error',
+  message: "Cannot read properties of undefined (reading 'logout')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'logout')\n" +
+    '    at logOutSession (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/controller/sessionController.js:298:22)\n' +
+    '    at Layer.handle [as handle_request] (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/route.js:149:13)\n' +
+    '    at statusConnection (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/middleware/statusConnection.js:70:5)\n' +
+    '    at Layer.handle [as handle_request] (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/route.js:149:13)\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/middleware/auth.js:75:11',
+  timestamp: '2026-02-15T06:40:15.064Z'
+}
+{
+  message: 'ID: -LemfuB1cekK5J9eAAAB saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:15.068Z'
+}
+{
+  message: 'ID: XnstJs9JtDek6pAXAAAD entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:19.099Z'
+}
+{
+  message: 'isLogged\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:24.223Z'
+}
+{
+  message: 'Started Session: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:25.432Z'
+}
+{
+  message: 'ID: XnstJs9JtDek6pAXAAAD saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:25.435Z'
+}
+{
+  message: 'ID: -mGN6m6b1BQlisZrAAAF entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:40:25.764Z'
+}
+{
+  message: 'Server is running on port: 21465',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:09.389Z'
+}
+{
+  message: '\x1B[31m Visit 0.0.0.0:21465/api-docs for Swagger docs',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:09.391Z'
+}
+{
+  message: 'WPPConnect-Server version: 2.8.11',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:09.391Z'
+}
+{
+  message: 'ID: cr2bO6vA8JzI3_9AAAAB entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:10.157Z'
+}
+{
+  level: 'error',
+  message: "Cannot read properties of undefined (reading 'logout')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'logout')\n" +
+    '    at logOutSession (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/controller/sessionController.js:298:22)\n' +
+    '    at Layer.handle [as handle_request] (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/route.js:149:13)\n' +
+    '    at statusConnection (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/middleware/statusConnection.js:70:5)\n' +
+    '    at Layer.handle [as handle_request] (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/route.js:149:13)\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/middleware/auth.js:75:11',
+  timestamp: '2026-02-15T06:42:21.465Z'
+}
+{
+  level: 'error',
+  message: "Cannot read properties of undefined (reading 'status')",
+  stack: "TypeError: Cannot read properties of undefined (reading 'status')\n" +
+    '    at closeSession (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/controller/sessionController.js:257:44)\n' +
+    '    at Layer.handle [as handle_request] (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/Volumes/rythmn103/code/hospital-project/node_modules/express/lib/router/route.js:149:13)\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect/server/dist/middleware/auth.js:75:11',
+  timestamp: '2026-02-15T06:42:21.518Z'
+}
+{
+  message: 'ID: cr2bO6vA8JzI3_9AAAAB saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:21.603Z'
+}
+{
+  message: 'ID: KOYemUqdy5xd42j3AAAD entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:25.658Z'
+}
+{
+  message: 'notLogged\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:34.334Z'
+}
+{
+  message: 'qrReadSuccess\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:54.656Z'
+}
+{
+  message: 'Started Session: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:55.859Z'
+}
+{
+  message: 'ID: KOYemUqdy5xd42j3AAAD saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:55.860Z'
+}
+{
+  message: 'ID: 7ZdfgbHNCN3PTir7AAAF entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:42:56.092Z'
+}
+{
+  message: 'ID: 7ZdfgbHNCN3PTir7AAAF saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:49:58.130Z'
+}
+{
+  message: 'ID: Z2RT8S6rFnRq76EhAAAH entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:49:58.489Z'
+}
+{
+  name: 'ProtocolError',
+  message: 'Protocol error (Runtime.callFunctionOn): Execution context was destroyed.',
+  level: 'error',
+  stack: 'ProtocolError: Protocol error (Runtime.callFunctionOn): Execution context was destroyed.\n' +
+    '    at <instance_members_initializer> (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/common/CallbackRegistry.js:103:14)\n' +
+    '    at new Callback (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/common/CallbackRegistry.js:107:16)\n' +
+    '    at CallbackRegistry.create (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/common/CallbackRegistry.js:25:26)\n' +
+    '    at Connection._rawSend (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Connection.js:108:26)\n' +
+    '    at CdpCDPSession.send (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/CdpSession.js:74:33)\n' +
+    '    at #evaluate (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/ExecutionContext.js:363:50)\n' +
+    '    at ExecutionContext.evaluate (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/ExecutionContext.js:277:36)\n' +
+    '    at IsolatedWorld.evaluate (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/IsolatedWorld.js:100:30)\n' +
+    '    at CdpFrame.evaluate (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Frame.js:362:43)\n' +
+    '    at CdpFrame.<anonymous> (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/util/decorators.js:109:27)\n' +
+    '    at CdpPage.evaluate (/Volumes/rythmn103/code/hospital-project/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Page.js:830:43)\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:99:56\n' +
+    '    at step (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:49:23)\n' +
+    '    at Object.next (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:30:53)\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:24:71\n' +
+    '    at new Promise (<anonymous>)',
+  timestamp: '2026-02-15T06:50:10.190Z'
+}
+{
+  message: 'browserClose\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:50:10.303Z'
+}
+{
+  message: 'ID: Z2RT8S6rFnRq76EhAAAH saiu',
+  level: 'info',
+  timestamp: '2026-02-15T06:50:10.384Z'
+}
+{
+  message: 'ID: QWT-wiBDx086yiQmAAAJ entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:50:11.870Z'
+}
+{
+  message: 'notLogged\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:50:18.316Z'
+}
+{
+  message: 'Server is running on port: 21465',
+  level: 'info',
+  timestamp: '2026-02-15T06:51:08.345Z'
+}
+{
+  message: '\x1B[31m Visit 0.0.0.0:21465/api-docs for Swagger docs',
+  level: 'info',
+  timestamp: '2026-02-15T06:51:08.346Z'
+}
+{
+  message: 'WPPConnect-Server version: 2.8.11',
+  level: 'info',
+  timestamp: '2026-02-15T06:51:08.347Z'
+}
+{
+  message: 'ID: gRk-s_joy_OId3qpAAAB entrou',
+  level: 'info',
+  timestamp: '2026-02-15T06:51:11.658Z'
+}
+{
+  message: 'notLogged\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:51:18.370Z'
+}
+{
+  message: 'browserClose\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:52:18.477Z'
+}
+{
+  message: 'qrReadError\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T06:52:18.746Z'
+}
+{
+  level: 'error',
+  message: 'Auto Close Called',
+  stack: 'Error: Auto Close Called\n' +
+    '    at Whatsapp.<anonymous> (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/layers/host.layer.js:543:35)\n' +
+    '    at step (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/layers/host.layer.js:60:23)\n' +
+    '    at Object.next (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/layers/host.layer.js:41:53)\n' +
+    '    at fulfilled (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/layers/host.layer.js:32:58)',
+  timestamp: '2026-02-15T06:52:18.747Z'
+}
+{
+  message: 'ID: gRk-s_joy_OId3qpAAAB saiu',
+  level: 'info',
+  timestamp: '2026-02-15T08:00:47.440Z'
+}
+{
+  message: 'ID: kwTuCXsSem7hO5DfAAAD entrou',
+  level: 'info',
+  timestamp: '2026-02-15T08:00:49.175Z'
+}
+{
+  message: 'ID: kwTuCXsSem7hO5DfAAAD saiu',
+  level: 'info',
+  timestamp: '2026-02-15T10:24:53.174Z'
+}
+{
+  message: 'ID: t-bJZ3Hjkp2yXaiuAAAF entrou',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:13.183Z'
+}
+{
+  message: 'notLogged\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:16.694Z'
+}
+{
+  message: 'qrReadSuccess\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:35.991Z'
+}
+{
+  message: 'Started Session: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:37.238Z'
+}
+{
+  message: 'ID: t-bJZ3Hjkp2yXaiuAAAF saiu',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:37.239Z'
+}
+{
+  message: 'State Change PAIRING: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:37.240Z'
+}
+{
+  message: 'State Change CONNECTED: hospital',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:37.241Z'
+}
+{
+  message: 'ID: efdsto6Z-kXxtTV2AAAH entrou',
+  level: 'info',
+  timestamp: '2026-02-15T10:38:37.425Z'
+}
+{
+  name: 'InvalidWidError',
+  level: 'error',
+  message: 'wid error: invalid wid',
+  stack: 'InvalidWidError: wid error: invalid wid\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:107:31\n' +
+    '    at step (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:49:23)\n' +
+    '    at Object.next (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:30:53)\n' +
+    '    at fulfilled (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:21:58)\n' +
+    'JS Stack: InvalidWidError: wid error: invalid wid\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:104:33\n' +
+    '    at step (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:49:23)\n' +
+    '    at Object.next (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:30:53)\n' +
+    '    at fulfilled (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:21:58)\n' +
+    'Function: function (_a) {\n' +
+    '                            var to = _a.to, content = _a.content, options = _a.options;\n' +
+    '                            return WPP.chat.sendTextMessage(to, content, __assign(__assign({}, options), { waitForAck: true }));\n' +
+    '                        }',
+  timestamp: '2026-02-15T10:39:06.505Z'
+}
+{
+  name: 'InvalidWidError',
+  level: 'error',
+  message: 'wid error: invalid wid',
+  stack: 'InvalidWidError: wid error: invalid wid\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:107:31\n' +
+    '    at step (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:49:23)\n' +
+    '    at Object.next (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:30:53)\n' +
+    '    at fulfilled (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:21:58)\n' +
+    'JS Stack: InvalidWidError: wid error: invalid wid\n' +
+    '    at /Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:104:33\n' +
+    '    at step (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:49:23)\n' +
+    '    at Object.next (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:30:53)\n' +
+    '    at fulfilled (/Volumes/rythmn103/code/hospital-project/node_modules/@wppconnect-team/wppconnect/dist/api/helpers/evaluate-and-return.js:21:58)\n' +
+    'Function: function (_a) {\n' +
+    '                            var to = _a.to, content = _a.content, options = _a.options;\n' +
+    '                            return WPP.chat.sendTextMessage(to, content, __assign(__assign({}, options), { waitForAck: true }));\n' +
+    '                        }',
+  timestamp: '2026-02-15T10:39:18.012Z'
+}
+{
+  message: 'ID: efdsto6Z-kXxtTV2AAAH saiu',
+  level: 'info',
+  timestamp: '2026-02-15T10:59:03.187Z'
+}
+{
+  message: 'ID: zyKdXJkvweNmnUd9AAAJ entrou',
+  level: 'info',
+  timestamp: '2026-02-15T10:59:03.643Z'
+}
+{
+  message: 'ID: bfvxysZdSgZIQAaCAAAL entrou',
+  level: 'info',
+  timestamp: '2026-02-15T10:59:31.091Z'
+}
+{
+  message: 'ID: bfvxysZdSgZIQAaCAAAL saiu',
+  level: 'info',
+  timestamp: '2026-02-15T10:59:31.183Z'
+}
+{
+  message: 'ID: zyKdXJkvweNmnUd9AAAJ saiu',
+  level: 'info',
+  timestamp: '2026-02-15T11:00:13.662Z'
+}
+{
+  message: 'ID: iO-a5gi3EWL0xx3QAAAN entrou',
+  level: 'info',
+  timestamp: '2026-02-15T11:00:13.885Z'
+}
+{
+  message: 'ID: iO-a5gi3EWL0xx3QAAAN saiu',
+  level: 'info',
+  timestamp: '2026-02-15T11:00:16.214Z'
+}
+{
+  message: 'browserClose\n\n',
+  level: 'info',
+  timestamp: '2026-02-15T11:01:29.490Z'
+}
+{
+  message: 'ID: TAgs43R6cdY_fi0tAAAP entrou',
+  level: 'info',
+  timestamp: '2026-02-15T11:46:56.272Z'
+}
+{
+  message: 'ID: TAgs43R6cdY_fi0tAAAP saiu',
+  level: 'info',
+  timestamp: '2026-02-15T11:46:56.369Z'
+}
+{
+  message: 'ID: eQINprlxxxBn5IKsAAAR entrou',
+  level: 'info',
+  timestamp: '2026-02-15T11:58:10.908Z'
+}
+{
+  message: 'ID: eQINprlxxxBn5IKsAAAR saiu',
+  level: 'info',
+  timestamp: '2026-02-15T11:58:10.979Z'
+}
