@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  wppconnect:
+    image: wppconnect/server-cli:latest
+    container_name: wpp-otp-server
+    restart: unless-stopped
+    volumes:
+      - ./config.ts:/usr/src/wpp-server/src/config.ts
+      - wppconnect_tokens:/usr/src/wpp-server/tokens
+    ports:
+      - "21465:21465"
+
+volumes:
+  wppconnect_tokens: {}
