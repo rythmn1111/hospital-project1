@@ -1,0 +1,8 @@
+{
+  "name": "wpp-otp-server",
+  "version": "1.0.0",
+  "dependencies": {
+    "@wppconnect-team/wppconnect": "^1.37.9",
+    "express": "^4.22.1"
+  }
+}
