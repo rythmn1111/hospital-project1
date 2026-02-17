@@ -1,2 +1,1 @@
 adafruit-circuitpython-pn532
-bluezero

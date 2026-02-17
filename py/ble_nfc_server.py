@@ -3,11 +3,17 @@ HospitalOS BLE NFC Server
 Runs on Pi Zero 2 W. Advertises a BLE GATT service that allows
 browsers (via Web Bluetooth) to read/write NFC cards through a PN532 module.
 Falls back to simulation mode if PN532 hardware is not connected.
+
+Uses BlueZ D-Bus API directly for reliable BLE advertising + GATT.
 """
 
 import time
 import threading
-import struct
+import dbus
+import dbus.exceptions
+import dbus.mainloop.glib
+import dbus.service
+from gi.repository import GLib
 
 # --- PN532 hardware setup ---
 SIMULATE = False
@@ -28,39 +34,33 @@ except Exception as e:
     HAS_HARDWARE = False
     SIMULATE = True
 
-# --- BLE imports ---
-from bluezero import adapter, peripheral
-
 # --- UUIDs ---
 SERVICE_UUID = "12345678-1234-5678-1234-56789abcdef0"
 NFC_DATA_UUID = "12345678-1234-5678-1234-56789abcdef1"
 COMMAND_UUID = "12345678-1234-5678-1234-56789abcdef2"
 STATUS_UUID = "12345678-1234-5678-1234-56789abcdef3"
 
-# --- Shared state ---
-nfc_data_value = ""
-status_value = "idle"
-nfc_data_char = None
-status_char = None
+# --- D-Bus constants ---
+BLUEZ_SERVICE = "org.bluez"
+LE_ADVERTISING_MANAGER_IFACE = "org.bluez.LEAdvertisingManager1"
+LE_ADVERTISEMENT_IFACE = "org.bluez.LEAdvertisement1"
+GATT_MANAGER_IFACE = "org.bluez.GattManager1"
+GATT_SERVICE_IFACE = "org.bluez.GattService1"
+GATT_CHRC_IFACE = "org.bluez.GattCharacteristic1"
+DBUS_OM_IFACE = "org.freedesktop.DBus.ObjectManager"
+DBUS_PROP_IFACE = "org.freedesktop.DBus.Properties"
+
+mainloop = None
 
 
-def encode_str(s):
-    """Encode a string to bytes for BLE characteristic."""
-    return list(s.encode("utf-8"))
-
-
-def decode_bytes(value):
-    """Decode BLE characteristic bytes to string."""
-    return bytes(value).decode("utf-8", errors="ignore").strip("\x00")
-
-
-# --- NFC operations (reused from nfc_server.py) ---
+# ============================================================
+# NFC operations (same as nfc_server.py)
+# ============================================================
 
 def read_nfc_card(timeout=30):
     if SIMULATE:
         time.sleep(2)
         return {"nfc_id": None, "raw": ""}
-
     start = time.time()
     while time.time() - start < timeout:
         uid = pn532.read_passive_target(timeout=1.0)
@@ -94,7 +94,6 @@ def write_nfc_card(nfc_id, timeout=30):
     if SIMULATE:
         time.sleep(2)
         return {"success": True, "nfc_id": nfc_id}
-
     start = time.time()
     while time.time() - start < timeout:
         uid = pn532.read_passive_target(timeout=1.0)
@@ -122,7 +121,6 @@ def format_nfc_card(timeout=30):
     if SIMULATE:
         time.sleep(1)
         return {"success": True}
-
     start = time.time()
     while time.time() - start < timeout:
         uid = pn532.read_passive_target(timeout=1.0)
@@ -145,170 +143,351 @@ def format_nfc_card(timeout=30):
     return None
 
 
-# --- BLE characteristic callbacks ---
+# ============================================================
+# BLE Advertisement (registers with BlueZ LEAdvertisingManager)
+# ============================================================
 
-def update_status(new_status):
-    """Update status characteristic and send notification."""
-    global status_value
-    status_value = new_status
-    if status_char:
-        status_char.set_value(encode_str(status_value))
-        status_char.changed()
-    print(f"[BLE] Status: {new_status}")
+class Advertisement(dbus.service.Object):
+    PATH_BASE = "/org/bluez/hospitalos/advertisement"
+
+    def __init__(self, bus, index):
+        self.path = f"{self.PATH_BASE}{index}"
+        self.bus = bus
+        self.ad_type = "peripheral"
+        self.local_name = "HospitalOS-NFC"
+        self.service_uuids = [SERVICE_UUID]
+        self.include_tx_power = True
+        dbus.service.Object.__init__(self, bus, self.path)
+
+    def get_properties(self):
+        props = {
+            LE_ADVERTISEMENT_IFACE: {
+                "Type": self.ad_type,
+                "LocalName": dbus.String(self.local_name),
+                "ServiceUUIDs": dbus.Array(self.service_uuids, signature="s"),
+                "IncludeTxPower": dbus.Boolean(self.include_tx_power),
+            }
+        }
+        return props
+
+    def get_path(self):
+        return dbus.ObjectPath(self.path)
+
+    @dbus.service.method(DBUS_PROP_IFACE, in_signature="s", out_signature="a{sv}")
+    def GetAll(self, interface):
+        if interface != LE_ADVERTISEMENT_IFACE:
+            raise dbus.exceptions.DBusException(
+                "org.freedesktop.DBus.Error.InvalidArgs",
+                f"Unknown interface: {interface}",
+            )
+        return self.get_properties()[LE_ADVERTISEMENT_IFACE]
+
+    @dbus.service.method(LE_ADVERTISEMENT_IFACE, in_signature="", out_signature="")
+    def Release(self):
+        print("[BLE] Advertisement released")
 
 
-def update_nfc_data(data):
-    """Update NFC data characteristic and send notification."""
-    global nfc_data_value
-    nfc_data_value = data
-    if nfc_data_char:
-        nfc_data_char.set_value(encode_str(nfc_data_value))
-        nfc_data_char.changed()
-    print(f"[BLE] NFC Data: {data}")
+# ============================================================
+# GATT Application (service + characteristics)
+# ============================================================
+
+class Application(dbus.service.Object):
+    PATH = "/org/bluez/hospitalos"
+
+    def __init__(self, bus):
+        self.path = self.PATH
+        self.services = []
+        dbus.service.Object.__init__(self, bus, self.path)
+
+    def get_path(self):
+        return dbus.ObjectPath(self.path)
+
+    def add_service(self, service):
+        self.services.append(service)
+
+    @dbus.service.method(DBUS_OM_IFACE, out_signature="a{oa{sa{sv}}}")
+    def GetManagedObjects(self):
+        response = {}
+        for service in self.services:
+            response[service.get_path()] = service.get_properties()
+            for chrc in service.characteristics:
+                response[chrc.get_path()] = chrc.get_properties()
+        return response
 
 
-def on_nfc_data_read():
-    """Called when browser reads NFC Data characteristic."""
-    return encode_str(nfc_data_value)
+class Service(dbus.service.Object):
+    PATH_BASE = "/org/bluez/hospitalos/service"
+
+    def __init__(self, bus, index, uuid, primary):
+        self.path = f"{self.PATH_BASE}{index}"
+        self.bus = bus
+        self.uuid = uuid
+        self.primary = primary
+        self.characteristics = []
+        dbus.service.Object.__init__(self, bus, self.path)
+
+    def get_path(self):
+        return dbus.ObjectPath(self.path)
+
+    def add_characteristic(self, chrc):
+        self.characteristics.append(chrc)
+
+    def get_properties(self):
+        return {
+            GATT_SERVICE_IFACE: {
+                "UUID": self.uuid,
+                "Primary": self.primary,
+                "Characteristics": dbus.Array(
+                    [c.get_path() for c in self.characteristics],
+                    signature="o",
+                ),
+            }
+        }
+
+    @dbus.service.method(DBUS_PROP_IFACE, in_signature="s", out_signature="a{sv}")
+    def GetAll(self, interface):
+        if interface != GATT_SERVICE_IFACE:
+            raise dbus.exceptions.DBusException(
+                "org.freedesktop.DBus.Error.InvalidArgs",
+                f"Unknown interface: {interface}",
+            )
+        return self.get_properties()[GATT_SERVICE_IFACE]
 
 
-def on_status_read():
-    """Called when browser reads Status characteristic."""
-    return encode_str(status_value)
+class Characteristic(dbus.service.Object):
+    def __init__(self, bus, index, uuid, flags, service):
+        self.path = f"{service.path}/char{index}"
+        self.bus = bus
+        self.uuid = uuid
+        self.flags = flags
+        self.service = service
+        self.value = []
+        self.notifying = False
+        dbus.service.Object.__init__(self, bus, self.path)
+        service.add_characteristic(self)
+
+    def get_path(self):
+        return dbus.ObjectPath(self.path)
+
+    def get_properties(self):
+        return {
+            GATT_CHRC_IFACE: {
+                "Service": self.service.get_path(),
+                "UUID": self.uuid,
+                "Flags": self.flags,
+            }
+        }
+
+    @dbus.service.method(DBUS_PROP_IFACE, in_signature="s", out_signature="a{sv}")
+    def GetAll(self, interface):
+        if interface != GATT_CHRC_IFACE:
+            raise dbus.exceptions.DBusException(
+                "org.freedesktop.DBus.Error.InvalidArgs",
+                f"Unknown interface: {interface}",
+            )
+        return self.get_properties()[GATT_CHRC_IFACE]
+
+    @dbus.service.method(GATT_CHRC_IFACE, in_signature="a{sv}", out_signature="ay")
+    def ReadValue(self, options):
+        return self.value
+
+    @dbus.service.method(GATT_CHRC_IFACE, in_signature="aya{sv}")
+    def WriteValue(self, value, options):
+        self.value = value
+
+    @dbus.service.method(GATT_CHRC_IFACE)
+    def StartNotify(self):
+        self.notifying = True
+
+    @dbus.service.method(GATT_CHRC_IFACE)
+    def StopNotify(self):
+        self.notifying = False
+
+    @dbus.service.signal(DBUS_PROP_IFACE, signature="sa{sv}as")
+    def PropertiesChanged(self, interface, changed, invalidated):
+        pass
+
+    def send_notify(self, value):
+        """Update value and send notification if subscribed."""
+        self.value = value
+        if self.notifying:
+            self.PropertiesChanged(
+                GATT_CHRC_IFACE,
+                {"Value": dbus.Array(value, signature="y")},
+                [],
+            )
 
 
-def on_command_write(value, options):
-    """Called when browser writes to Command characteristic."""
-    cmd = decode_bytes(value)
-    print(f"[BLE] Command received: {cmd}")
+# ============================================================
+# Our concrete characteristics
+# ============================================================
 
-    # Process command in a background thread so BLE isn't blocked
-    thread = threading.Thread(target=process_command, args=(cmd,), daemon=True)
-    thread.start()
+class NfcDataCharacteristic(Characteristic):
+    def __init__(self, bus, service):
+        super().__init__(bus, 0, NFC_DATA_UUID, ["read", "notify"], service)
+        self.value = dbus.Array([], signature="y")
 
 
-def process_command(cmd):
-    """Process an NFC command from the browser."""
-    cmd = cmd.strip()
+class CommandCharacteristic(Characteristic):
+    def __init__(self, bus, service, on_write):
+        super().__init__(bus, 1, COMMAND_UUID, ["write", "write-without-response"], service)
+        self.on_write = on_write
 
-    if cmd == "READ":
-        update_status("waiting")
-        result = read_nfc_card(timeout=30)
-        if result is None:
-            update_nfc_data("")
-            update_status("error:timeout")
+    @dbus.service.method(GATT_CHRC_IFACE, in_signature="aya{sv}")
+    def WriteValue(self, value, options):
+        cmd = bytes(value).decode("utf-8", errors="ignore").strip("\x00")
+        print(f"[BLE] Command received: {cmd}")
+        self.on_write(cmd)
+
+
+class StatusCharacteristic(Characteristic):
+    def __init__(self, bus, service):
+        super().__init__(bus, 2, STATUS_UUID, ["read", "notify"], service)
+        self.value = dbus.Array(b"idle", signature="y")
+
+
+# ============================================================
+# Command handler
+# ============================================================
+
+class NfcCommandHandler:
+    def __init__(self, nfc_data_chrc, status_chrc):
+        self.nfc_data = nfc_data_chrc
+        self.status = status_chrc
+
+    def _set_status(self, s):
+        print(f"[BLE] Status: {s}")
+        self.status.send_notify(dbus.Array(s.encode("utf-8"), signature="y"))
+
+    def _set_nfc_data(self, d):
+        print(f"[BLE] NFC Data: {d}")
+        self.nfc_data.send_notify(dbus.Array(d.encode("utf-8"), signature="y"))
+
+    def handle(self, cmd):
+        # Run in background thread so BLE main loop isn't blocked
+        thread = threading.Thread(target=self._process, args=(cmd,), daemon=True)
+        thread.start()
+
+    def _process(self, cmd):
+        cmd = cmd.strip()
+
+        if cmd == "READ":
+            GLib.idle_add(self._set_status, "waiting")
+            result = read_nfc_card(timeout=30)
+            if result is None:
+                GLib.idle_add(self._set_nfc_data, "")
+                GLib.idle_add(self._set_status, "error:timeout")
+            else:
+                nfc_id = result.get("nfc_id") or ""
+                GLib.idle_add(self._set_nfc_data, nfc_id)
+                GLib.idle_add(self._set_status, "success")
+
+        elif cmd.startswith("WRITE:"):
+            nfc_id = cmd[6:]
+            if not nfc_id:
+                GLib.idle_add(self._set_status, "error:missing_id")
+                return
+            GLib.idle_add(self._set_status, "waiting")
+            result = write_nfc_card(nfc_id, timeout=30)
+            if result is None:
+                GLib.idle_add(self._set_status, "error:timeout")
+            elif result.get("success"):
+                GLib.idle_add(self._set_status, "success")
+            else:
+                GLib.idle_add(self._set_status, f"error:{result.get('error', 'write_failed')}")
+
+        elif cmd == "FORMAT":
+            GLib.idle_add(self._set_status, "waiting")
+            result = format_nfc_card(timeout=30)
+            if result is None:
+                GLib.idle_add(self._set_status, "error:timeout")
+            elif result.get("success"):
+                GLib.idle_add(self._set_status, "success")
+            else:
+                GLib.idle_add(self._set_status, f"error:{result.get('error', 'format_failed')}")
+
         else:
-            nfc_id = result.get("nfc_id") or ""
-            update_nfc_data(nfc_id)
-            update_status("success")
-
-    elif cmd.startswith("WRITE:"):
-        nfc_id = cmd[6:]
-        if not nfc_id:
-            update_status("error:missing_id")
-            return
-        update_status("waiting")
-        result = write_nfc_card(nfc_id, timeout=30)
-        if result is None:
-            update_status("error:timeout")
-        elif result.get("success"):
-            update_status("success")
-        else:
-            update_status(f"error:{result.get('error', 'write_failed')}")
-
-    elif cmd == "FORMAT":
-        update_status("waiting")
-        result = format_nfc_card(timeout=30)
-        if result is None:
-            update_status("error:timeout")
-        elif result.get("success"):
-            update_status("success")
-        else:
-            update_status(f"error:{result.get('error', 'format_failed')}")
-
-    else:
-        update_status(f"error:unknown_command")
+            GLib.idle_add(self._set_status, "error:unknown_command")
 
 
-# --- Main ---
+# ============================================================
+# Main
+# ============================================================
+
+def find_adapter(bus):
+    """Find the first Bluetooth adapter object path."""
+    remote_om = dbus.Interface(
+        bus.get_object(BLUEZ_SERVICE, "/"), DBUS_OM_IFACE
+    )
+    objects = remote_om.GetManagedObjects()
+    for path, interfaces in objects.items():
+        if LE_ADVERTISING_MANAGER_IFACE in interfaces:
+            return path
+    return None
+
 
 def main():
-    global nfc_data_char, status_char
+    global mainloop
 
-    # Find the default Bluetooth adapter
-    adapters = adapter.list_adapters()
-    if not adapters:
-        print("No Bluetooth adapter found!")
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    bus = dbus.SystemBus()
+
+    adapter_path = find_adapter(bus)
+    if not adapter_path:
+        print("No BLE adapter found! Is Bluetooth enabled?")
         return
-    adapter_address = adapters[0]
-    print(f"Using Bluetooth adapter: {adapter_address}")
 
-    # Create peripheral
-    nfc_peripheral = peripheral.Peripheral(
-        adapter_address,
-        local_name="HospitalOS-NFC",
-        appearance=0x0000,
+    print(f"Using adapter: {adapter_path}")
+
+    # Power on the adapter and set alias
+    adapter_props = dbus.Interface(
+        bus.get_object(BLUEZ_SERVICE, adapter_path), DBUS_PROP_IFACE
+    )
+    adapter_props.Set("org.bluez.Adapter1", "Powered", dbus.Boolean(True))
+    adapter_props.Set("org.bluez.Adapter1", "Alias", dbus.String("HospitalOS-NFC"))
+
+    # --- Register GATT application ---
+    app = Application(bus)
+    service = Service(bus, 0, SERVICE_UUID, True)
+
+    nfc_data_chrc = NfcDataCharacteristic(bus, service)
+    status_chrc = StatusCharacteristic(bus, service)
+    handler = NfcCommandHandler(nfc_data_chrc, status_chrc)
+    command_chrc = CommandCharacteristic(bus, service, handler.handle)
+
+    app.add_service(service)
+
+    gatt_manager = dbus.Interface(
+        bus.get_object(BLUEZ_SERVICE, adapter_path), GATT_MANAGER_IFACE
+    )
+    gatt_manager.RegisterApplication(
+        app.get_path(), {},
+        reply_handler=lambda: print("[BLE] GATT application registered"),
+        error_handler=lambda e: print(f"[BLE] Failed to register GATT: {e}"),
     )
 
-    # Add NFC service
-    nfc_peripheral.add_service(
-        srv_id=1,
-        uuid=SERVICE_UUID,
-        primary=True,
+    # --- Register BLE advertisement ---
+    ad = Advertisement(bus, 0)
+    ad_manager = dbus.Interface(
+        bus.get_object(BLUEZ_SERVICE, adapter_path), LE_ADVERTISING_MANAGER_IFACE
+    )
+    ad_manager.RegisterAdvertisement(
+        ad.get_path(), {},
+        reply_handler=lambda: print("[BLE] Advertisement registered"),
+        error_handler=lambda e: print(f"[BLE] Failed to register advertisement: {e}"),
     )
 
-    # NFC Data characteristic (Read + Notify)
-    nfc_peripheral.add_characteristic(
-        srv_id=1,
-        chr_id=1,
-        uuid=NFC_DATA_UUID,
-        value=encode_str(""),
-        notifying=False,
-        flags=["read", "notify"],
-        read_callback=on_nfc_data_read,
-        write_callback=None,
-        notify_callback=None,
-    )
-
-    # Command characteristic (Write)
-    nfc_peripheral.add_characteristic(
-        srv_id=1,
-        chr_id=2,
-        uuid=COMMAND_UUID,
-        value=[],
-        notifying=False,
-        flags=["write", "write-without-response"],
-        read_callback=None,
-        write_callback=on_command_write,
-        notify_callback=None,
-    )
-
-    # Status characteristic (Read + Notify)
-    nfc_peripheral.add_characteristic(
-        srv_id=1,
-        chr_id=3,
-        uuid=STATUS_UUID,
-        value=encode_str("idle"),
-        notifying=False,
-        flags=["read", "notify"],
-        read_callback=on_status_read,
-        write_callback=None,
-        notify_callback=None,
-    )
-
-    # Store references for notification updates
-    # bluezero stores characteristics internally; we access them via the peripheral
-    nfc_data_char = nfc_peripheral.characteristics[0]
-    status_char = nfc_peripheral.characteristics[2]
-
-    print("Starting BLE advertising as 'HospitalOS-NFC'...")
+    print("Advertising as 'HospitalOS-NFC' via BLE...")
     print(f"Hardware: {HAS_HARDWARE}, Simulate: {SIMULATE}")
     print(f"Service UUID: {SERVICE_UUID}")
 
+    mainloop = GLib.MainLoop()
     try:
-        nfc_peripheral.publish()
+        mainloop.run()
     except KeyboardInterrupt:
         print("\nShutting down BLE NFC server")
+        ad_manager.UnregisterAdvertisement(ad.get_path())
+        mainloop.quit()
 
 
 if __name__ == "__main__":
